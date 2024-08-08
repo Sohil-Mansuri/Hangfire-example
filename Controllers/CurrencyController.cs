@@ -66,7 +66,7 @@ namespace ScheduleJob.Controllers
             {
                 var currency = currencyDto.Adapt<Currency>();
                 BackgroundJob.Schedule(() => _currencyRepo.AddAsync(currency), delay);
-                return Ok("your schedule is set");
+                return Ok("your job is set");
             }
             else
             {
@@ -84,7 +84,7 @@ namespace ScheduleJob.Controllers
             return Ok("Operation done");
         }
 
-        //Recussing jobs
+        //Recurring jobs
         //Recurring jobs are executed many times on the specified CRON schedule.
         //http://www.cronmaker.com/?1
         //https://crontab.guru/
@@ -94,14 +94,14 @@ namespace ScheduleJob.Controllers
             var currency = currencyDto.Adapt<Currency>();
 
             RecurringJob.AddOrUpdate<ICurrencyRepo>($"jobID:{0}", servie => servie.AddAsync(currency), "* * * * *");
-            return Ok("Job created");
+            return Ok(" Recurring Job created");
         }
 
 
         //Countineu job 
         //Continuation jobs are executed when their parent job has finished.
-        [HttpPost("schedule/countineuJob")]
-        public IActionResult CountinueJob([FromBody] CurrencyDto currencyDto)
+        [HttpPost("schedule/continueJob")]
+        public IActionResult ContinueJob([FromBody] CurrencyDto currencyDto)
         {
             var currency = currencyDto.Adapt<Currency>();
 
@@ -112,11 +112,11 @@ namespace ScheduleJob.Controllers
             return Ok("jobs are scheduled");
         }
 
-        [HttpDelete("schedule/deleteRerringjob")]
+        [HttpDelete("schedule/deleteRecurringJob")]
         public IActionResult StopRecurringJob(string jobId)
         {
             RecurringJob.RemoveIfExists(jobId);
-            return Ok($"stoped {jobId}");
+            return Ok($"{jobId} stopped ");
         }
 
         [HttpPut("schedule/updateRecurringJob")]
